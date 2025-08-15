@@ -5,6 +5,10 @@ export type APICategory = {
   strCategoryDescription: string;
 };
 
+export type APICategoryList = {
+  categories: APICategory[];
+};
+
 export type APIMeal = {
   idMeal: string;
   strMeal: string;
