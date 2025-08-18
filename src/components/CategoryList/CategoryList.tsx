@@ -6,6 +6,7 @@ import {
   setCurrentCategory,
 } from "../../store/features/categoriesSlice";
 import type { Category } from "../../model/category";
+import { loadCategoryMeals } from "../../store/features/mealsSlice";
 
 export function CategoryList() {
   const dispatch = useAppDispatch();
@@ -14,6 +15,7 @@ export function CategoryList() {
 
   const selectCategory = (category: Category) => {
     dispatch(setCurrentCategory(category.name));
+    dispatch(loadCategoryMeals(category.name));
   };
 
   return (
