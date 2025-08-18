@@ -67,3 +67,13 @@ export type APIMeal = {
   strCreativeCommonsConfirmed: string | null;
   dateModified: string | null;
 };
+
+export type APIMealInfo = {
+  strMeal: string;
+  strMealThumb: string;
+  idMeal: string;
+};
+
+export type APIMealList = {
+  meals: APIMealInfo[];
+};
