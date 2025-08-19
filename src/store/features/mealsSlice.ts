@@ -3,11 +3,11 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { Meal } from "../../model/meal";
+import type { MealInfo } from "../../model/meal";
 import { loadMeals } from "../../api/mealDB";
 
 export type MealsState = {
-  meals: Meal[];
+  meals: MealInfo[];
   mealsLoading: boolean;
 };
 
@@ -35,13 +35,19 @@ const meals = createSlice({
         state.mealsLoading = true;
       })
       .addCase(loadCategoryMeals.fulfilled, (state, { payload }) => {
-        // state.meals = payload.meals
+        state.meals = payload;
         state.mealsLoading = false;
       })
       .addCase(loadCategoryMeals.rejected, (state) => {
         state.mealsLoading = false;
       });
   },
+  selectors: {
+    selectMeals: (state) => state.meals,
+    selectMealsLoading: (state) => state.mealsLoading,
+  },
 });
+
+export const { selectMeals, selectMealsLoading } = meals.selectors;
 
 export default meals.reducer;

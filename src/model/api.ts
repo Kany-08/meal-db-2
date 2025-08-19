@@ -77,3 +77,7 @@ export type APIMealInfo = {
 export type APIMealList = {
   meals: APIMealInfo[];
 };
+
+export type APISearchList = {
+  meals: APIMeal[];
+};

@@ -1,6 +1,14 @@
 import axios from "axios";
-import type { APICategory, APICategoryList, APIMealList } from "../model/api";
+import type {
+  APICategory,
+  APICategoryList,
+  APIMeal,
+  APIMealInfo,
+  APIMealList,
+  APISearchList,
+} from "../model/api";
 import type { Category } from "../model/category";
+import type { Meal, MealInfo } from "../model/meal";
 
 export const mealDB = axios.create({
   baseURL: import.meta.env.VITE_MEAL_DB_URL,
@@ -40,5 +48,32 @@ export const loadMeals = async (options: LoadMealsOptions) => {
 
   const { data } = await mealDB.get<APIMealList>(url);
 
-  return data;
+  return data.meals.map(transformAPIMeal);
+};
+
+const transformAPIMeal = (apiMeal: APIMealInfo): MealInfo => {
+  return {
+    id: apiMeal.idMeal,
+    name: apiMeal.strMeal,
+    image: apiMeal.strMealThumb,
+  };
+};
+
+export const searchMeals = async (query: string) => {
+  const url = `search.php?s=${query}`;
+
+  const { data } = await mealDB.get<APISearchList>(url);
+
+  return data.meals.map(transformAPISearch);
+};
+
+const transformAPISearch = (apiMeal: APIMeal): Meal => {
+  return {
+    ...transformAPIMeal(apiMeal),
+    ...(apiMeal.strMealAlternate
+      ? {
+          alternate: apiMeal.strMealAlternate,
+        }
+      : {}),
+  };
 };
