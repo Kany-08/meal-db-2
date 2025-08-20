@@ -5,7 +5,8 @@ export type MealIngredient = {
 
 export type Meal = {
   id: string;
-  alternate: string;
+  name: string;
+  alternate?: string;
   categoryName: string;
   region: string;
   instructions: string;
@@ -17,3 +18,5 @@ export type Meal = {
   sourceUrl?: string;
   imageSource?: string;
 };
+
+export type MealInfo = Pick<Meal, "name" | "image" | "id">;
