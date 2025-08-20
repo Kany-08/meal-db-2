@@ -1,6 +1,6 @@
 export type MealIngredient = {
   name: string;
-  measure: string;
+  measure?: string;
 };
 
 export type Meal = {

@@ -3,17 +3,21 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { MealInfo } from "../../model/meal";
+import type { Meal, MealInfo } from "../../model/meal";
 import { loadMeals } from "../../api/mealDB";
 
 export type MealsState = {
   meals: MealInfo[];
   mealsLoading: boolean;
+  selectedMealId: string | null;
+  meal: Meal | null;
 };
 
 const initialState: MealsState = {
   meals: [],
   mealsLoading: false,
+  selectedMealId: null,
+  meal: null,
 };
 
 export const loadCategoryMeals = createAsyncThunk(
@@ -28,7 +32,14 @@ export const loadCategoryMeals = createAsyncThunk(
 const meals = createSlice({
   name: "meals",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentMealId(state, { payload }: PayloadAction<string>) {
+      state.selectedMealId = payload;
+    },
+    setMeal(state, { payload }: PayloadAction<Meal>) {
+      state.meal = payload;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(loadCategoryMeals.pending, (state) => {
@@ -45,9 +56,18 @@ const meals = createSlice({
   selectors: {
     selectMeals: (state) => state.meals,
     selectMealsLoading: (state) => state.mealsLoading,
+    selectCurrentMealId: (state) => state.selectedMealId,
+    selectMeal: (state) => state.meal,
   },
 });
 
-export const { selectMeals, selectMealsLoading } = meals.selectors;
+export const { setCurrentMealId, setMeal } = meals.actions;
+
+export const {
+  selectMeal,
+  selectMeals,
+  selectMealsLoading,
+  selectCurrentMealId,
+} = meals.selectors;
 
 export default meals.reducer;
