@@ -4,7 +4,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import type { Meal, MealInfo } from "../../model/meal";
-import { loadMeals } from "../../api/mealDB";
+import { findMealById, loadMeals } from "../../api/mealDB";
 
 export type MealsState = {
   meals: MealInfo[];
@@ -29,6 +29,10 @@ export const loadCategoryMeals = createAsyncThunk(
   }
 );
 
+export const loadMeal = createAsyncThunk("meals/loadMeal", (id: string) => {
+  return findMealById(id);
+});
+
 const meals = createSlice({
   name: "meals",
   initialState,
@@ -51,6 +55,9 @@ const meals = createSlice({
       })
       .addCase(loadCategoryMeals.rejected, (state) => {
         state.mealsLoading = false;
+      })
+      .addCase(loadMeal.fulfilled, (state, { payload }) => {
+        state.meal = payload;
       });
   },
   selectors: {

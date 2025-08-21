@@ -58,7 +58,7 @@ const transformAPIMealInfo = (apiMeal: APIMealInfo): MealInfo => {
   };
 };
 
-export const findMealId = async (id: string) => {
+export const findMealById = async (id: string) => {
   const url = `lookup.php?i=${id}`;
   const { data } = await mealDB.get<APISearchList>(url);
   const [meal] = data.meals.map(transformAPIMeal);

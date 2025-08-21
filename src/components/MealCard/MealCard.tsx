@@ -8,21 +8,22 @@ import {
 } from "@mui/material";
 import type { MealInfo } from "../../model/meal";
 import S from "./MealCard.module.css";
-import { useDispatch } from "react-redux";
-import { useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
+  loadMeal,
   selectCurrentMealId,
   setCurrentMealId,
 } from "../../store/features/mealsSlice";
 import * as C from "./ModalCard.components";
 
-export function MealCard({ image, name }: MealInfo) {
-  const dispatch = useDispatch();
-  const selectedName = useAppSelector(selectCurrentMealId);
-  const isSelected = selectedName === name;
+export function MealCard({ image, name, id }: MealInfo) {
+  const dispatch = useAppDispatch();
+  const selectedId = useAppSelector(selectCurrentMealId);
+  const isSelected = selectedId === id;
 
   const select = () => {
-    dispatch(setCurrentMealId(name));
+    dispatch(setCurrentMealId(id));
+    dispatch(loadMeal(id));
   };
   return (
     <C.Container selected={isSelected}>
