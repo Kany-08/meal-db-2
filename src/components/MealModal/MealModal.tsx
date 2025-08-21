@@ -1,13 +1,10 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Grid, Modal, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { selectMeal, unsetMeal } from "../../store/features/mealsSlice";
+import * as C from "./MealModal.components";
+import TerrainIcon from "@mui/icons-material/Terrain";
+import CategoryIcon from "@mui/icons-material/Category";
+import { RichText } from "../RichText/RichText";
 
 export function MealModal() {
   const dispatch = useAppDispatch();
@@ -29,20 +26,37 @@ export function MealModal() {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box>
-        <Card>
-          <CardMedia
-            image={meal.image}
-            title={meal.name}
-            sx={{ width: 200, height: 200 }}
-          />
-          <CardContent>
+      <C.Content>
+        <C.MealCard>
+          <C.Image image={meal.image} title={meal.name} />
+          <C.MealContent>
             <Typography gutterBottom variant="h5" component="div">
               {meal.name}
             </Typography>
-          </CardContent>
-        </Card>
-      </Box>
+            <Grid container gap={1}>
+              <Grid>
+                <CategoryIcon />
+              </Grid>
+              <Grid>
+                <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                  {meal.categoryName}
+                </Typography>
+              </Grid>
+              <Grid>
+                <TerrainIcon />
+              </Grid>
+              <Grid>
+                <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                  {meal.region}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              <RichText text={meal.instructions} />
+            </Typography>
+          </C.MealContent>
+        </C.MealCard>
+      </C.Content>
     </Modal>
   );
 }
