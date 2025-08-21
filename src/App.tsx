@@ -3,6 +3,8 @@ import "./App.css";
 import { AppProvider } from "./components/AppProvider";
 import { CategoryList } from "./components/CategoryList/CategoryList";
 import { MealList } from "./components/MealList/MealList";
+import { MealModal } from "./components/MealModal/MealModal";
+// import { MealList } from "./components/MealList/MealList";
 
 function App() {
   return (
@@ -14,6 +16,7 @@ function App() {
           </Grid>
           <Grid size={9}>
             <MealList />
+            <MealModal />
           </Grid>
         </Grid>
       </Container>

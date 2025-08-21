@@ -43,6 +43,9 @@ const meals = createSlice({
     setMeal(state, { payload }: PayloadAction<Meal>) {
       state.meal = payload;
     },
+    unsetMeal(state) {
+      state.meal = null;
+    },
   },
   extraReducers(builder) {
     builder
@@ -68,7 +71,7 @@ const meals = createSlice({
   },
 });
 
-export const { setCurrentMealId, setMeal } = meals.actions;
+export const { setCurrentMealId, setMeal, unsetMeal } = meals.actions;
 
 export const {
   selectMeal,

@@ -105,7 +105,7 @@ const transformAPIMeal = (apiMeal: APIMeal): Meal => {
   const ingredients = transformAPIMealIngredients(apiMeal);
 
   return {
-    ...transformAPIMeal(apiMeal),
+    ...transformAPIMealInfo(apiMeal),
     ...transform("strMealAlternate", "alternate"),
     ...transform("strCategory", "categoryName"),
     ...transform("strArea", "region"),
