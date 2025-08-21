@@ -92,10 +92,13 @@ const transformAPIMealIngredients = (apiMeal: APIMeal) => {
         name: value,
       };
     }
-    if (key.startsWith("strMeasure") && value && ingredients[key]) {
+    if (key.startsWith("strMeasure") && value) {
       const index = key.replace("strMeasure", "");
+      if (!ingredients[index]) {
+        continue;
+      }
       ingredients[index] = {
-        ...ingredients[key],
+        ...ingredients[index],
         measure: value,
       };
     }
@@ -117,6 +120,7 @@ const transformAPIMeal = (apiMeal: APIMeal): Meal => {
     ...transform("strYoutube", "youtubeUrl"),
     ...transform("strSource", "sourceUrl"),
     ...transform("strImageSource", "imageSource"),
+    tags: apiMeal.strTags?.split(",") ?? [],
     ingredients,
   };
 };

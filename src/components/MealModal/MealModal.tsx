@@ -4,6 +4,9 @@ import {
   CardContent,
   CardMedia,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
   Modal,
   Typography,
 } from "@mui/material";
@@ -15,6 +18,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 
 import * as C from "./MealModal.components";
 import { RichText } from "../RichText/RichText";
+import { Fragment } from "react/jsx-runtime";
 
 export function MealModal() {
   const dispatch = useAppDispatch();
@@ -60,9 +64,22 @@ export function MealModal() {
                 </Typography>
               </Grid>
             </Grid>
+            <List>
+              {meal.ingredients.map((item, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={item.name} secondary={item.measure} />
+                </ListItem>
+              ))}
+            </List>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               <RichText text={meal.instructions} />
             </Typography>
+
+            <Grid container gap={1}>
+              {meal.tags.map((tag, index) => (
+                <Grid key={index}>#{tag}</Grid>
+              ))}
+            </Grid>
           </C.MealContent>
         </C.MealCard>
       </C.Content>
