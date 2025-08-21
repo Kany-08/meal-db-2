@@ -8,7 +8,7 @@ import type {
   APISearchList,
 } from "../model/api";
 import type { Category } from "../model/category";
-import type { Meal, MealInfo } from "../model/meal";
+import type { Meal, MealInfo, MealIngredient } from "../model/meal";
 
 export const mealDB = axios.create({
   baseURL: import.meta.env.VITE_MEAL_DB_URL,
@@ -48,10 +48,10 @@ export const loadMeals = async (options: LoadMealsOptions) => {
 
   const { data } = await mealDB.get<APIMealList>(url);
 
-  return data.meals.map(transformAPIMeal);
+  return data.meals.map(transformAPIMealInfo);
 };
 
-const transformAPIMeal = (apiMeal: APIMealInfo): MealInfo => {
+const transformAPIMealInfo = (apiMeal: APIMealInfo): MealInfo => {
   return {
     id: apiMeal.idMeal,
     name: apiMeal.strMeal,
@@ -59,21 +59,64 @@ const transformAPIMeal = (apiMeal: APIMealInfo): MealInfo => {
   };
 };
 
-export const searchMeals = async (query: string) => {
-  const url = `search.php?s=${query}`;
+export const findMealById = async (id: string) => {
+  const url = `lookup.php?i=${id}`;
 
   const { data } = await mealDB.get<APISearchList>(url);
 
-  return data.meals.map(transformAPISearch);
+  const [meal] = data.meals.map(transformAPIMeal);
+
+  return meal;
 };
 
-const transformAPISearch = (apiMeal: APIMeal): Meal => {
+const transformAPIMealProp =
+  (meal: APIMeal) => (prop: keyof APIMeal, targetProp: keyof Meal) => {
+    const value = meal[prop];
+
+    if (value === null) {
+      return {};
+    }
+    return {
+      [targetProp]: value,
+    };
+  };
+
+const transformAPIMealIngredients = (apiMeal: APIMeal) => {
+  const entries = Object.entries(apiMeal);
+  const ingredients: Record<string, MealIngredient> = {};
+
+  for (const [key, value] of entries) {
+    if (key.startsWith("strIngredient") && value) {
+      const index = key.replace("strIngredient", "");
+      ingredients[index] = {
+        name: value,
+      };
+    }
+    if (key.startsWith("strMeasure") && value && ingredients[key]) {
+      const index = key.replace("strMeasure", "");
+      ingredients[index] = {
+        ...ingredients[key],
+        measure: value,
+      };
+    }
+  }
+  return Object.values(ingredients);
+};
+
+const transformAPIMeal = (apiMeal: APIMeal): Meal => {
+  const transform = transformAPIMealProp(apiMeal);
+
+  const ingredients = transformAPIMealIngredients(apiMeal);
+
   return {
-    ...transformAPIMeal(apiMeal),
-    ...(apiMeal.strMealAlternate
-      ? {
-          alternate: apiMeal.strMealAlternate,
-        }
-      : {}),
+    ...transformAPIMealInfo(apiMeal),
+    ...transform("strMealAlternate", "alternate"),
+    ...transform("strCategory", "categoryName"),
+    ...transform("strArea", "region"),
+    ...transform("strInstructions", "instructions"),
+    ...transform("strYoutube", "youtubeUrl"),
+    ...transform("strSource", "sourceUrl"),
+    ...transform("strImageSource", "imageSource"),
+    ingredients,
   };
 };

@@ -11,8 +11,8 @@ export function MealList() {
   return (
     <Grid container spacing={2}>
       {data.map((card) => (
-        <Grid size={6}>
-          <MealCard {...card} key={card.id} />
+        <Grid size={6} key={card.id}>
+          <MealCard {...card} />
         </Grid>
       ))}
       {!category && <Grid>Выберите категорию</Grid>}
