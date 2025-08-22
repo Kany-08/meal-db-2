@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Dialog,
   Grid,
   List,
   ListItem,
@@ -15,6 +16,7 @@ import { selectMeal, unsetMeal } from "../../store/features/mealsSlice";
 
 import TerrainIcon from "@mui/icons-material/Terrain";
 import CategoryIcon from "@mui/icons-material/Category";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 
 import * as C from "./MealModal.components";
 import { RichText } from "../RichText/RichText";
@@ -33,9 +35,10 @@ export function MealModal() {
     return;
   }
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={close}
+      scroll="paper"
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -43,9 +46,20 @@ export function MealModal() {
         <C.MealCard>
           <C.Image image={meal.image} title={meal.name} />
           <C.MealContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {meal.name}
-            </Typography>
+            <Grid container gap={1} alignItems="center">
+              <Grid>
+                <Typography gutterBottom variant="h5" component="div">
+                  {meal.name}
+                </Typography>
+              </Grid>
+              {meal.youtubeUrl && (
+                <Grid>
+                  <a href={meal.youtubeUrl} target="_blank">
+                    <YouTubeIcon />
+                  </a>
+                </Grid>
+              )}
+            </Grid>
             <Grid container gap={1}>
               <Grid>
                 <CategoryIcon />
@@ -83,6 +97,6 @@ export function MealModal() {
           </C.MealContent>
         </C.MealCard>
       </C.Content>
-    </Modal>
+    </Dialog>
   );
 }
